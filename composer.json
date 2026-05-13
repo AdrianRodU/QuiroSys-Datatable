@@ -1,0 +1,18 @@
+{
+    "name": "esolutions/datatable",
+    "version": "1.0.0",
+    "description": "Server-side DataTable, dialogs and Excel exports for Laravel",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [{ "name": "Carlos Erique Gaspar", "email": "eriquegasparcarlos@gmail.com" }],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0|^12.0|^13.0",
+        "maatwebsite/excel": "^3.1",
+        "esolutions/laravel": "^1.0"
+    },
+    "autoload": {
+        "psr-4": { "Esolutions\\Datatable\\": "src/" }
+    },
+    "minimum-stability": "stable"
+}
