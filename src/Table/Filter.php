@@ -61,6 +61,8 @@ class Filter implements \JsonSerializable
 
     protected ?string $searchUrl = null;
 
+    protected ?string $placeholder = null;
+
     protected function __construct() {}
 
     public static function make(string $name): self
@@ -225,6 +227,13 @@ class Filter implements \JsonSerializable
         return $this;
     }
 
+    public function placeholder(string $placeholder): self
+    {
+        $this->placeholder = $placeholder;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         $options = $this->options;
@@ -268,6 +277,7 @@ class Filter implements \JsonSerializable
             'clearable' => $this->clearable,
             'filterable' => $this->filterable,
             'searchUrl' => $this->searchUrl,
+            'placeholder' => $this->placeholder,
             'dependsOn' => $this->dependsOn,
             'remote' => $this->remote,
             'resetOnParentChange' => $this->resetOnParentChange,
