@@ -136,6 +136,15 @@ class Filter implements \JsonSerializable
         return $this;
     }
 
+    public function withoutAllOption(): self
+    {
+        $this->includeAllOption = false;
+        if ($this->value === 'all') $this->value = null;
+        if ($this->default === 'all') $this->default = null;
+
+        return $this;
+    }
+
     public function includeAllOption(bool $include = true): self
     {
         $this->includeAllOption = $include;
