@@ -133,6 +133,34 @@ class Cell
     }
 
     /**
+     * Imagen rectangular (logos, fotos, etc.) con object-fit contain.
+     *
+     * @param  string  $src     URL de la imagen
+     * @param  string|null  $alt     Texto alternativo
+     * @param  string|null  $width   Ancho del contenedor (ej: '72px')
+     * @param  string|null  $height  Alto del contenedor (ej: '36px')
+     * @param  string|null  $radius  Border-radius (ej: '4px')
+     */
+    public static function image(
+        string $src,
+        ?string $alt = null,
+        ?string $width = null,
+        ?string $height = null,
+        ?string $radius = null
+    ): array {
+        $arr = [
+            'type_input' => 'image',
+            'src' => $src,
+        ];
+        if ($alt)    { $arr['alt']    = $alt; }
+        if ($width)  { $arr['width']  = $width; }
+        if ($height) { $arr['height'] = $height; }
+        if ($radius) { $arr['radius'] = $radius; }
+
+        return $arr;
+    }
+
+    /**
      * Switch (toggle on/off).
      *
      * @param  bool  $checked  Estado inicial
