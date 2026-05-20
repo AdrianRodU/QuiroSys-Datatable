@@ -155,7 +155,7 @@ class Filter implements \JsonSerializable
         return $this;
     }
 
-    public function filterLocal(bool $filterLocal = false): self
+    public function filterLocal(bool $filterLocal = true): self
     {
         $this->filterLocal = $filterLocal;
 
