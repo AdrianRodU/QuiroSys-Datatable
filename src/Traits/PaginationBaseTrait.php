@@ -49,6 +49,7 @@ trait PaginationBaseTrait
             'visibleColumns' => $this->visibleColumns,
             'pagination' => $this->initPagination(),
             'headerButtons' => $this->getHeaderButtons(),
+            'bulkActions' => method_exists($this, 'getBulkActions') ? $this->getBulkActions() : [],
         ];
 
         if (method_exists($this, 'getTableBadge')) {
