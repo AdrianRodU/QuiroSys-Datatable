@@ -50,6 +50,7 @@ trait PaginationBaseTrait
             'pagination' => $this->initPagination(),
             'headerButtons' => $this->getHeaderButtons(),
             'bulkActions' => method_exists($this, 'getBulkActions') ? $this->getBulkActions() : [],
+            'mobileConfig' => method_exists($this, 'getMobileConfig') ? $this->getMobileConfig() : null,
         ];
 
         if (method_exists($this, 'getTableBadge')) {
