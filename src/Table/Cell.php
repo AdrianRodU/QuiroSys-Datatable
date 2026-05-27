@@ -41,15 +41,33 @@ class Cell
 
     /**
      * Badge (etiqueta colorida).
+     *
+     * @param  string       $label              Texto del badge
+     * @param  string|null  $color              Color custom (hex o alias)
+     * @param  string|null  $type               Tipo predefinido: success, danger, warning, info, primary, secondary, neutral
+     * @param  bool         $is_lighten_color   Si usar variante light (solo para color custom)
+     * @param  string       $variant            'light' (default, bg suave) o 'solid' (bg fuerte + texto blanco)
+     * @param  string|null  $icon               Icono opcional (ej: 'fa-light fa-check')
+     * @param  string       $icon_position      'left' (default) o 'right'
      */
-    public static function badge(string $label, ?string $color = null, ?string $type = null, bool $is_lighten_color = true): array
-    {
+    public static function badge(
+        string $label,
+        ?string $color = null,
+        ?string $type = null,
+        bool $is_lighten_color = true,
+        string $variant = 'light',
+        ?string $icon = null,
+        string $icon_position = 'left'
+    ): array {
         return [
             'type_input' => 'badge',
             'label' => $label,
             'color' => $color,
             'type' => $type,
             'is_lighten_color' => $is_lighten_color,
+            'variant' => $variant,
+            'icon' => $icon,
+            'icon_position' => $icon_position,
         ];
     }
 
@@ -212,25 +230,34 @@ class Cell
     }
 
     /**
-     * Badge activo/inactivo.
+     * Badge activo/inactivo. Usa types semanticos success/danger.
+     *
+     * @param  string  $variant  'light' (default) o 'solid'
      */
-    public static function badgeIsActive($row, string $yesText = 'Si', string $noText = 'No'): array
+    public static function badgeIsActive($row, string $yesText = 'Si', string $noText = 'No', string $variant = 'light'): array
     {
         $isActive = is_array($row)
             ? ($row['is_active'] ?? false)
             : ($row->is_active ?? false);
 
         return self::badge(
-            $isActive ? $yesText : $noText,
-            $isActive ? '#28c76f' : '#ff4c51'
+            label: $isActive ? $yesText : $noText,
+            type: $isActive ? 'success' : 'danger',
+            variant: $variant
         );
     }
 
-    public static function badgeBoolean($value, string $yesText = 'Si', string $noText = 'No'): array
+    /**
+     * Badge boolean genérico. Usa types semanticos success/neutral.
+     *
+     * @param  string  $variant  'light' (default) o 'solid'
+     */
+    public static function badgeBoolean($value, string $yesText = 'Si', string $noText = 'No', string $variant = 'light'): array
     {
         return self::badge(
-            $value ? $yesText : $noText,
-            $value ? '#28c76f' : '#ff4c51'
+            label: $value ? $yesText : $noText,
+            type: $value ? 'success' : 'neutral',
+            variant: $variant
         );
     }
 

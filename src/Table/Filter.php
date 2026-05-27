@@ -236,6 +236,24 @@ class Filter implements \JsonSerializable
         return $this;
     }
 
+    /** Acceso al class actual (para auto-layout del builder). */
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    /** Acceso al tipo (para calcular peso en auto-layout). */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /** Setter usado por el auto-layout del FilterBuilder (no marca como manual). */
+    public function setClassInternal(string $class): void
+    {
+        $this->class = $class;
+    }
+
     public function placeholder(string $placeholder): self
     {
         $this->placeholder = $placeholder;
@@ -299,55 +317,59 @@ class Filter implements \JsonSerializable
         return $this->toArray();
     }
 
-    public static function makeInput(string $name, string $label = '', string $class = 'col-6'): self
+    public static function makeInput(string $name, string $label = '', ?string $class = null): self
     {
-        return self::make($name)
+        $instance = self::make($name)
             ->label($label)
             ->type('input')
-            ->default('')
-            ->cssClass($class);
+            ->default('');
+        if ($class !== null) $instance->cssClass($class);
+        return $instance;
     }
 
-    public static function makeSelect(string $name, string $label = '', array $options = [], string $class = 'col-6'): self
+    public static function makeSelect(string $name, string $label = '', array $options = [], ?string $class = null): self
     {
-        return self::make($name)
+        $instance = self::make($name)
             ->label($label)
             ->type('select')
             ->options($options)
             ->default('all')
-            ->includeAllOption()
-            ->cssClass($class);
+            ->includeAllOption();
+        if ($class !== null) $instance->cssClass($class);
+        return $instance;
     }
 
     /**
      * Filtro predefinido tipo tree-select (XTreeSelect).
      */
-    public static function makeTreeSelect(string $name, string $label = '', array $options = [], string $class = 'col-6'): self
+    public static function makeTreeSelect(string $name, string $label = '', array $options = [], ?string $class = null): self
     {
-        return self::make($name)
+        $instance = self::make($name)
             ->label($label)
             ->type('tree-select')
             ->options($options)
             ->default('all')
             ->includeAllOption()
-            ->withFilter(true)
-            ->cssClass($class);
+            ->withFilter(true);
+        if ($class !== null) $instance->cssClass($class);
+        return $instance;
     }
 
     /**
      * Filtro select con búsqueda remota al backend (autocomplete).
      */
-    public static function makeSearch(string $name, string $label, string $url, string $class = 'col-6'): self
+    public static function makeSearch(string $name, string $label, string $url, ?string $class = null): self
     {
-        return self::make($name)
+        $instance = self::make($name)
             ->label($label)
             ->type('select')
             ->options([])
             ->optionValue('id')
             ->optionLabel('name')
             ->searchUrl($url)
-            ->clearable()
-            ->cssClass($class);
+            ->clearable();
+        if ($class !== null) $instance->cssClass($class);
+        return $instance;
     }
 
     public static function makePeriod(string $name = 'period', ?string $label = null, ?string $class = null): self
