@@ -4,15 +4,6 @@ Infraestructura para tablas server-side con paginación, filtros, columnas, diá
 
 ## Instalación
 
-```json
-"repositories": [
-    { "type": "vcs", "url": "https://github.com/eriquegasparcarlos/esolutions-datatable" }
-],
-"require": {
-    "esolutions/datatable": "^1.0"
-}
-```
-
 ```bash
 composer require esolutions/datatable
 ```
