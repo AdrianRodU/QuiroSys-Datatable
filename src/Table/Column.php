@@ -29,6 +29,14 @@ class Column implements JsonSerializable
 
     public bool $only_export = false;
 
+    /**
+     * Si la columna puede exportarse (Excel/PDF). Las columnas visuales o de
+     * acción (badges, botones, celdas compuestas sin valor escalar) deben
+     * marcarse como no exportables para que no aparezcan en el selector de
+     * exportación ni en el archivo.
+     */
+    public bool $exportable = true;
+
     public bool $summable = false;
 
     public ?int $excel_width = null;
@@ -161,6 +169,17 @@ class Column implements JsonSerializable
     }
 
     /**
+     * Marca si la columna es exportable. Por defecto true; usar exportable(false)
+     * para columnas visuales/compuestas/de acción que no deben ir al archivo.
+     */
+    public function exportable(bool $exportable = true): self
+    {
+        $this->exportable = $exportable;
+
+        return $this;
+    }
+
+    /**
      * Marca la columna como sumable (se incluye en fila de totales al exportar).
      */
     public function summable(bool $summable = true): self
@@ -216,6 +235,7 @@ class Column implements JsonSerializable
             'locked' => $this->locked,
             'visible' => $this->visible,
             'only_export' => $this->only_export,
+            'exportable' => $this->exportable,
             'summable' => $this->summable,
             'excel_width' => $this->excel_width,
             'excel_format' => $this->excel_format,
@@ -267,6 +287,7 @@ class Column implements JsonSerializable
             ->alignRight()
             ->width('180px')
             ->locked()
-            ->sortable(false);
+            ->sortable(false)
+            ->exportable(false);
     }
 }
