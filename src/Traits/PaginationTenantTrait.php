@@ -34,4 +34,16 @@ trait PaginationTenantTrait
             'message' => 'Actualización satisfactoria',
         ];
     }
+
+    /**
+     * Guarda las columnas de exportación elegidas por el usuario para esta tabla.
+     */
+    public function persistExportColumns(array $columns): void
+    {
+        if (empty($this->tableName) && method_exists($this, 'getTableConfig')) {
+            $this->tableName = $this->getTableConfig()['table_name'] ?? '';
+        }
+
+        $this->persistExportColumnsBase($this->defaultModelQuery(), $columns);
+    }
 }

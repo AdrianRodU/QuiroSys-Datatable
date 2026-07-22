@@ -14,6 +14,9 @@ trait PaginationBaseTrait
 
     protected array $visibleColumns = [];
 
+    /** Columnas elegidas por el usuario para exportar (persistidas por tabla). */
+    protected array $exportColumns = [];
+
     protected array $columns = [];
 
     protected array $filters = [];
@@ -47,6 +50,7 @@ trait PaginationBaseTrait
             'columns' => $this->columns,
             'filters' => $this->filters,
             'visibleColumns' => $this->visibleColumns,
+            'exportColumns' => $this->exportColumns,
             'pagination' => $this->initPagination(),
             'headerButtons' => $this->getHeaderButtons(),
             'bulkActions' => method_exists($this, 'getBulkActions') ? $this->getBulkActions() : [],
@@ -98,10 +102,28 @@ trait PaginationBaseTrait
         } else {
             $visibleFromDb = $record->visible_columns ?? [];
             $this->visibleColumns = ! empty($visibleFromDb) ? $visibleFromDb : $this->extractVisibleColumns();
+            $this->exportColumns = $record->export_columns ?? [];
             $this->perPage = (int) ($record->records_per_page ?? 10);
             $this->sortBy = (string) ($record->sort_by ?: 'id');
             $this->descending = (bool) ($record->descending ?? true);
             $this->direction = $this->descending ? 'desc' : 'asc';
+        }
+    }
+
+    /**
+     * Persiste las columnas de exportación elegidas por el usuario para esta
+     * tabla (para que no tenga que re-seleccionarlas la próxima vez).
+     */
+    public function persistExportColumnsBase($model, array $columns): void
+    {
+        $record = $model
+            ->where('user_id', auth()->id())
+            ->where('table', $this->tableName)
+            ->first();
+
+        if ($record) {
+            $record->export_columns = array_values($columns);
+            $record->save();
         }
     }
 
