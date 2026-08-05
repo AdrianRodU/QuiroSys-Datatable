@@ -4,6 +4,14 @@ Infraestructura para tablas server-side con paginación, filtros, columnas, diá
 
 ## Instalación
 
+Desde este repositorio (VCS), agregando en el `composer.json` del proyecto:
+
+```json
+"repositories": [
+    { "type": "vcs", "url": "https://github.com/AdrianRodU/QuiroSys-Datatable.git" }
+]
+```
+
 ```bash
 composer require esolutions/datatable
 ```
