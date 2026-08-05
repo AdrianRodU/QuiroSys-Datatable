@@ -1,5 +1,5 @@
 {
-    "name": "esolutions/datatable",
+    "name": "quirosys/datatable",
     "description": "Server-side DataTable, dialogs and Excel exports for Laravel",
     "type": "library",
     "license": "proprietary",
@@ -8,10 +8,10 @@
         "php": "^8.2",
         "laravel/framework": "^11.0|^12.0|^13.0",
         "maatwebsite/excel": "^3.1",
-        "esolutions/laravel": "^1.0"
+        "quirosys/laravel": "^2.0"
     },
     "autoload": {
-        "psr-4": { "Esolutions\\Datatable\\": "src/" }
+        "psr-4": { "Quirosys\\Datatable\\": "src/" }
     },
     "minimum-stability": "stable"
 }

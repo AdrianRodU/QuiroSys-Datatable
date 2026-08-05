@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Table;
+namespace Quirosys\Datatable\Table;
 
 /**
  * Clase para construir una colección de columnas para la tabla.

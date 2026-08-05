@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Exports;
+namespace Quirosys\Datatable\Exports;
 
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Dialog;
+namespace Quirosys\Datatable\Dialog;
 
 use Illuminate\Database\Eloquent\Model;
 

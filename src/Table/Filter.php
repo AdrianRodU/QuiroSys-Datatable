@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Table;
+namespace Quirosys\Datatable\Table;
 
 /**
  * Clase para definir un filtro configurable para tablas del frontend.

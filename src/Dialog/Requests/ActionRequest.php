@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Dialog\Requests;
+namespace Quirosys\Datatable\Dialog\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

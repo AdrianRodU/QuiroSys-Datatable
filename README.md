@@ -1,4 +1,4 @@
-# esolutions/datatable
+# quirosys/datatable
 
 Infraestructura para tablas server-side con paginación, filtros, columnas, diálogos de confirmación y exportación Excel.
 
@@ -13,18 +13,18 @@ Desde este repositorio (VCS), agregando en el `composer.json` del proyecto:
 ```
 
 ```bash
-composer require esolutions/datatable
+composer require quirosys/datatable
 ```
 
 ## Namespace
 
 ```
-Esolutions\Datatable\
+Quirosys\Datatable\
 ```
 
 ## Dependencias
 
-- `esolutions/laravel` — para `ApiResponse` y `AuthHelper`
+- `quirosys/laravel` — para `ApiResponse` y `AuthHelper`
 - `maatwebsite/excel` — para exportación Excel
 
 ---
@@ -35,8 +35,8 @@ Cada módulo define un DataTable como trait y lo usa en su controlador:
 
 ```php
 // Modules/Plan/DataTables/PlanDataTable.php
-use Esolutions\Datatable\Table\{Button, ButtonBuilder, Column, ColumnBuilder, Filter, FilterBuilder};
-use Esolutions\Datatable\Traits\PaginationSystemTrait;
+use Quirosys\Datatable\Table\{Button, ButtonBuilder, Column, ColumnBuilder, Filter, FilterBuilder};
+use Quirosys\Datatable\Traits\PaginationSystemTrait;
 
 trait PlanDataTable
 {
@@ -81,10 +81,10 @@ trait PlanDataTable
 
 ```php
 // Modules/Plan/Http/Controllers/PlanController.php
-use Esolutions\Datatable\Dialog\DialogAction;
-use Esolutions\Datatable\Dialog\Requests\ActionRequest;
-use Esolutions\Laravel\Auth\AuthHelper;
-use Esolutions\Laravel\Http\ApiResponse;
+use Quirosys\Datatable\Dialog\DialogAction;
+use Quirosys\Datatable\Dialog\Requests\ActionRequest;
+use Quirosys\Laravel\Auth\AuthHelper;
+use Quirosys\Laravel\Http\ApiResponse;
 
 class PlanController extends Controller
 {
@@ -205,7 +205,7 @@ FormRequest estándar para los endpoints `storeDelete` y `storeActive`.
 ### `Column`
 
 ```php
-use Esolutions\Datatable\Table\Column;
+use Quirosys\Datatable\Table\Column;
 
 Column::make('name')->label('Nombre')
 Column::make('price')->label('Precio')->alignRight()->width('100px')
@@ -217,7 +217,7 @@ Column::actions()     // columna estándar de botones de acción
 ### `ColumnBuilder`
 
 ```php
-use Esolutions\Datatable\Table\ColumnBuilder;
+use Quirosys\Datatable\Table\ColumnBuilder;
 
 $columns = (new ColumnBuilder())
     ->addColumn(Column::make('name')->label('Nombre'))
@@ -233,7 +233,7 @@ $columns = (new ColumnBuilder())
 ### `Filter`
 
 ```php
-use Esolutions\Datatable\Table\Filter;
+use Quirosys\Datatable\Table\Filter;
 
 Filter::makeInput('search')->label('Buscar')->cssClass('col-12')
 Filter::makeSelect('status')->label('Estado')->options([
@@ -246,7 +246,7 @@ Filter::makeSelect('status')->label('Estado')->options([
 ### `FilterBuilder`
 
 ```php
-use Esolutions\Datatable\Table\FilterBuilder;
+use Quirosys\Datatable\Table\FilterBuilder;
 
 $filters = (new FilterBuilder())
     ->addFilter(Filter::makeInput('search')->label('Buscar')->cssClass('col-24 col-sm-12'))
@@ -258,7 +258,7 @@ $filters = (new FilterBuilder())
 ## Table — Botones de cabecera
 
 ```php
-use Esolutions\Datatable\Table\{Button, ButtonBuilder};
+use Quirosys\Datatable\Table\{Button, ButtonBuilder};
 
 $buttons = (new ButtonBuilder())
     ->addButton(Button::newButton())
@@ -286,9 +286,9 @@ Para tablas en el contexto del sistema central (base de datos `central`).
 Para tablas dentro del contexto de un tenant.
 
 ```php
-use Esolutions\Datatable\Traits\PaginationSystemTrait;
+use Quirosys\Datatable\Traits\PaginationSystemTrait;
 // o
-use Esolutions\Datatable\Traits\PaginationTenantTrait;
+use Quirosys\Datatable\Traits\PaginationTenantTrait;
 ```
 
 Ambos proveen: `updatePagination()`, `$perPage`, `$sortBy`, `$direction`, `$metaAdditional`.
@@ -300,7 +300,7 @@ Ambos proveen: `updatePagination()`, `$perPage`, `$sortBy`, `$direction`, `$meta
 Exportador Excel reutilizable con título, encabezados estilizados y datos.
 
 ```php
-use Esolutions\Datatable\Exports\GenericReportExport;
+use Quirosys\Datatable\Exports\GenericReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 public function exportRecords(Request $request)

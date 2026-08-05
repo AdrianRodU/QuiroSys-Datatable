@@ -1,8 +1,8 @@
 <?php
 
-namespace Esolutions\Datatable\Traits;
+namespace Quirosys\Datatable\Traits;
 
-use Esolutions\Datatable\Exports\GenericReportExport;
+use Quirosys\Datatable\Exports\GenericReportExport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Exception;

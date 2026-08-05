@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Traits;
+namespace Quirosys\Datatable\Traits;
 
 use Illuminate\Support\Carbon;
 

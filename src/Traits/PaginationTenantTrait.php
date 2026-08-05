@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Traits;
+namespace Quirosys\Datatable\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Esolutions\Datatable\Table;
+namespace Quirosys\Datatable\Table;
 
 /**
  * Clase Cell: Representa los distintos tipos de celdas que pueden ser renderizadas en el frontend.
