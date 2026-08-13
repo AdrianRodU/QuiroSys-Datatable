@@ -152,6 +152,17 @@ class Filter implements \JsonSerializable
             $this->value = 'all';
         }
 
+        // Filtro de periodo (type 'date'): el componente no soporta la prop
+        // include-all-option en ese bloque, así que la opción "Todos" se
+        // antepone directamente en las opciones que arma el backend. El valor
+        // por defecto sigue siendo 'month'; el consumidor debe tratar 'all'
+        // como "sin filtro de fechas" (getFilterDate devuelve nulls).
+        if ($include && $this->type === 'date'
+            && !collect($this->options ?? [])->contains(fn ($o) => ($o['id'] ?? null) === 'all')) {
+            $this->options = $this->options ?? [];
+            array_unshift($this->options, ['id' => 'all', 'name' => __('all')]);
+        }
+
         return $this;
     }
 

@@ -18,6 +18,11 @@ trait FilterTrait
         $dEnd = null;
 
         switch ($period) {
+            case 'all':
+                // "Todos" (Filter::makePeriod()->includeAllOption()): sin
+                // filtro de periodo — el consumidor debe omitir su whereBetween
+                // cuando ambas fechas llegan null.
+                break;
             case 'month':
                 $dStart = Carbon::parse($monthStart.'-01')->format('Y-m-d');
                 $dEnd = Carbon::parse($monthStart.'-01')->endOfMonth()->format('Y-m-d');
