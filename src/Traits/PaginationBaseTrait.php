@@ -151,7 +151,12 @@ trait PaginationBaseTrait
     {
         $this->tableName = $request->input('tableName', $this->tableName ?? '');
         $this->visibleColumns = $request->input('visibleColumns', $this->visibleColumns);
-        $this->sortBy = $request->input('sortBy', $this->sortBy);
+        // Un sortBy VACÍO (el front lo manda como '' cuando no hay columna elegida)
+        // no es un orden: cae al vigente o a 'id'. Antes se usaba tal cual y la
+        // consulta moría con "Unknown column '' in order clause" (lista de
+        // pacientes del ERP, 2026-09-23).
+        $requestedSort = trim((string) $request->input('sortBy', ''));
+        $this->sortBy = $requestedSort !== '' ? $requestedSort : (trim((string) $this->sortBy) ?: 'id');
         $this->descending = (bool) $request->input('descending', $this->descending);
         $this->direction = $this->descending ? 'desc' : 'asc';
         $this->perPage = (int) $request->input('rowsPerPage', $this->perPage);

@@ -93,8 +93,15 @@ class Cell
     /**
      * Link (enlace), opcional con ícono.
      */
-    public static function link(string $label, string $url, ?string $target = null, ?string $icon = null): array
-    {
+    public static function link(
+        string $label,
+        string $url,
+        ?string $target = null,
+        ?string $icon = null,
+        ?string $tooltip = null,
+        ?string $color = null,
+        bool $underline = true
+    ): array {
         $arr = [
             'type_input' => 'link',
             'label' => $label,
@@ -105,6 +112,18 @@ class Cell
         }
         if ($icon) {
             $arr['icon'] = $icon;
+        }
+        // Presentación opcional (2026-09-23): tooltip al pasar el mouse, color
+        // Quasar del texto e icono (p. ej. 'green-7' para un WhatsApp) y la
+        // opción de ir sin subrayado. Sin ellos, el enlace se ve como siempre.
+        if ($tooltip) {
+            $arr['tooltip'] = $tooltip;
+        }
+        if ($color) {
+            $arr['color'] = $color;
+        }
+        if (! $underline) {
+            $arr['underline'] = false;
         }
 
         return $arr;
