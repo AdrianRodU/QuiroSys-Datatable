@@ -3,6 +3,7 @@
 namespace Quirosys\Datatable\Traits;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 trait PaginationBaseTrait
 {
