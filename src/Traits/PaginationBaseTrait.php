@@ -95,6 +95,9 @@ trait PaginationBaseTrait
             $model->user_id = auth()->id();
             $model->table = $this->tableName;
             $model->visible_columns = $this->visibleColumns;
+            if ($this->supportsKnownColumns($model)) {
+                $model->known_columns = $this->allColumnNames();
+            }
             $model->records_per_page = 10;
             $model->sort_by = 'id';
             $model->descending = true;
@@ -102,6 +105,7 @@ trait PaginationBaseTrait
         } else {
             $visibleFromDb = $record->visible_columns ?? [];
             $this->visibleColumns = ! empty($visibleFromDb) ? $visibleFromDb : $this->extractVisibleColumns();
+            $this->revealNewColumns($record);
             $this->exportColumns = $record->export_columns ?? [];
             $this->perPage = (int) ($record->records_per_page ?? 10);
             $this->sortBy = (string) ($record->sort_by ?: 'id');
@@ -125,6 +129,59 @@ trait PaginationBaseTrait
             $record->export_columns = array_values($columns);
             $record->save();
         }
+    }
+
+    /**
+     * Columnas agregadas a la tabla DESPUÉS de que el usuario guardó su preferencia nacen
+     * visibles. La preferencia solo guarda las visibles, así que sin `known_columns` no se
+     * distingue "la ocultó el usuario" de "no existía cuando guardó": por eso se sella la
+     * lista de columnas conocidas. Una preferencia vieja (known_columns NULL) revela una
+     * sola vez toda columna ausente y queda sellada con las columnas de hoy.
+     */
+    private function revealNewColumns($record): void
+    {
+        if (! $this->supportsKnownColumns($record)) {
+            return;
+        }
+
+        $all = $this->allColumnNames();
+        $known = $record->known_columns;
+        $hiddenByDesign = collect($this->columns ?? [])
+            ->filter(fn ($col) => isset($col['visible']) && $col['visible'] === false)
+            ->pluck('name')
+            ->all();
+
+        $baseline = is_array($known) ? $known : $this->visibleColumns;
+        $new = array_values(array_diff($all, $baseline, $hiddenByDesign));
+
+        if (empty($new) && is_array($known)) {
+            return;
+        }
+
+        if (! empty($new)) {
+            // Orden de la definición de la tabla; descarta nombres que ya no existen.
+            $this->visibleColumns = array_values(array_intersect($all, array_merge($this->visibleColumns, $new)));
+            $record->visible_columns = $this->visibleColumns;
+        }
+        $record->known_columns = $all;
+        $record->save();
+    }
+
+    private function allColumnNames(): array
+    {
+        return collect($this->columns ?? [])->pluck('name')->filter()->values()->all();
+    }
+
+    /** `known_columns` llega por migración de la app; sin la columna se conserva el comportamiento anterior. */
+    private function supportsKnownColumns($model): bool
+    {
+        static $cache = [];
+        $key = get_class($model);
+        if (! array_key_exists($key, $cache)) {
+            $cache[$key] = Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), 'known_columns');
+        }
+
+        return $cache[$key];
     }
 
     private function extractVisibleColumns(): array
@@ -201,6 +258,10 @@ trait PaginationBaseTrait
                 $visible = array_values($visible);
             }
             $record->visible_columns = $visible;
+            // Sella las columnas que existen hoy: lo que el usuario deja fuera es decisión suya.
+            if ($this->supportsKnownColumns($record) && method_exists($this, 'getColumns')) {
+                $record->known_columns = collect($this->getColumns())->pluck('name')->filter()->values()->all();
+            }
             $record->save();
         }
 
