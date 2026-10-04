@@ -11,7 +11,8 @@ class DialogAction
         $name = $record->{$nameField};
         return [
             'title'               => "Eliminar $type",
-            'description'         => "¿Está seguro que desea eliminar $type <strong>$name</strong>? Esta acción no puede ser deshecha.",
+            // Tuteo (2026-10-03): antes "¿Está seguro que desea…? Esta acción no puede ser deshecha.".
+            'description'         => "¿Seguro que quieres eliminar $type <strong>$name</strong>? No se puede deshacer.",
             'button_label_submit' => __('delete'),
             'button_color'        => 'red',
             'icon'                => 'triangle-exclamation',
@@ -25,10 +26,11 @@ class DialogAction
         $isActive = (bool) $record->is_active;
         $name     = $record->{$nameField};
         return [
-            'title'               => $isActive ? "Desactivar el $type" : "Activar el $type",
+            // Sin artículo, como "Eliminar $type": "el $type" salía "el sala", "el categoría"… en los tipos femeninos.
+            'title'               => $isActive ? "Desactivar $type" : "Activar $type",
             'description'         => $isActive
-                ? "¿Está seguro que desea desactivar el $type <strong>$name</strong>?"
-                : "¿Está seguro que desea activar el $type <strong>$name</strong>?",
+                ? "¿Seguro que quieres desactivar $type <strong>$name</strong>?"
+                : "¿Seguro que quieres activar $type <strong>$name</strong>?",
             'button_label_submit' => $isActive ? __('deactivate') : __('activate'),
             'button_color'        => $isActive ? 'red' : 'green',
             'icon'                => $isActive ? 'shield-xmark' : 'shield-check',

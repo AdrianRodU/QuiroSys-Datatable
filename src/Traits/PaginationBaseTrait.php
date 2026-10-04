@@ -65,18 +65,32 @@ trait PaginationBaseTrait
         return $result;
     }
 
+    /** Filas por página que ofrecen todas las tablas. */
+    protected function pageSizes(): array
+    {
+        return [5, 10, 20, 50];
+    }
+
+    /** Una cantidad que no está en la lista (el 3 de la v1 o una preferencia vieja) vuelve a 10. */
+    protected function normalizePerPage(int $perPage): int
+    {
+        return in_array($perPage, $this->pageSizes(), true) ? $perPage : 10;
+    }
+
     public function initPagination(): array
     {
         $defaultSortable = collect($this->columns)->first(function ($col) {
             return isset($col['sortable']) ? (bool) $col['sortable'] : false;
         });
 
-        $pageSizes = array_values(array_unique([5, 10, 20, 50, 3, $this->perPage]));
+        // Las mismas opciones en todas las tablas (antes se colaba un 3 desde la v1 y, si la preferencia guardada
+        // traía otra cantidad, se sumaba a la lista).
+        $pageSizes = $this->pageSizes();
 
         return [
             'sortBy' => $defaultSortable['field'] ?? $this->sortBy,
             'descending' => $this->descending,
-            'perPage' => $this->perPage,
+            'perPage' => $this->normalizePerPage($this->perPage),
             'pageSizes' => $pageSizes,
         ];
     }
@@ -108,7 +122,7 @@ trait PaginationBaseTrait
             $this->visibleColumns = ! empty($visibleFromDb) ? $visibleFromDb : $this->extractVisibleColumns();
             $this->revealNewColumns($record);
             $this->exportColumns = $record->export_columns ?? [];
-            $this->perPage = (int) ($record->records_per_page ?? 10);
+            $this->perPage = $this->normalizePerPage((int) ($record->records_per_page ?? 10));
             $this->sortBy = (string) ($record->sort_by ?: 'id');
             $this->descending = (bool) ($record->descending ?? true);
             $this->direction = $this->descending ? 'desc' : 'asc';
@@ -217,7 +231,7 @@ trait PaginationBaseTrait
         $this->sortBy = $requestedSort !== '' ? $requestedSort : (trim((string) $this->sortBy) ?: 'id');
         $this->descending = (bool) $request->input('descending', $this->descending);
         $this->direction = $this->descending ? 'desc' : 'asc';
-        $this->perPage = (int) $request->input('rowsPerPage', $this->perPage);
+        $this->perPage = $this->normalizePerPage((int) $request->input('rowsPerPage', $this->perPage));
 
         $this->metaAdditional = [
             'meta' => [
