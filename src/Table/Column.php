@@ -265,14 +265,15 @@ class Column implements JsonSerializable
     }
 
     /**
-     * Columna predefinida para estado activo/inactivo.
+     * Columna "Activo" (v2.2.0): la de todas las tablas que se activan y desactivan. Su celda es
+     * Cell::activeToggle(). El título ya no es "¿Activo?", y "Estado" queda para los ciclos de varios pasos.
      */
     public static function isActive(): self
     {
         return self::make('is_active')
-            ->label(__('¿is active?'))
+            ->label('Activo')
             ->alignCenter()
-            ->width('120px')
+            ->width('100px')
             ->locked()
             ->sortable(false);
     }

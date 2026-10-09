@@ -252,8 +252,10 @@ class Cell
      * Badge activo/inactivo. Usa types semanticos success/danger.
      *
      * @param  string  $variant  'light' (default) o 'solid'
+     *
+     * @deprecated v2.2.0: la columna Activo usa Cell::activeToggle(), que muestra el estado y lo cambia.
      */
-    public static function badgeIsActive($row, string $yesText = 'Si', string $noText = 'No', string $variant = 'light'): array
+    public static function badgeIsActive($row, string $yesText = 'Sí', string $noText = 'No', string $variant = 'light'): array
     {
         $isActive = is_array($row)
             ? ($row['is_active'] ?? false)
@@ -271,7 +273,7 @@ class Cell
      *
      * @param  string  $variant  'light' (default) o 'solid'
      */
-    public static function badgeBoolean($value, string $yesText = 'Si', string $noText = 'No', string $variant = 'light'): array
+    public static function badgeBoolean($value, string $yesText = 'Sí', string $noText = 'No', string $variant = 'light'): array
     {
         return self::badge(
             label: $value ? $yesText : $noText,
@@ -294,6 +296,34 @@ class Cell
     public static function actionToggle(bool $checked, array $action, array $props = []): array
     {
         return self::component('XToggle', $checked, $props, $action);
+    }
+
+    /**
+     * Interruptor "Activo" (v2.2.0, con x-components 2.25.0): la celda de Column::isActive() en todas las
+     * tablas. Muestra el estado y lo cambia; reemplaza a Button::activeButton* y a badgeIsActive.
+     *
+     * - Apagar pide confirmación con el diálogo de la tabla: GET {resource}/record-active/{id} y
+     *   POST {resource}/active con { id, is_active: false }.
+     * - Encender va directo: POST {resource}/active con { id, is_active: true }.
+     * - $canChange = false lo muestra bloqueado (quien no tiene permiso ve el estado, pero no lo cambia).
+     * - $action distinto de 'active' manda el cambio a la página en los dos sentidos (evento 'actions' con
+     *   value true/false), para un diálogo propio, como la baja de Personal, que pide una fecha.
+     *
+     * @param  array|object  $row  Fila con is_active.
+     */
+    public static function activeToggle($row, bool $canChange = true, string $action = 'active'): array
+    {
+        $isActive = is_array($row)
+            ? (bool) ($row['is_active'] ?? false)
+            : (bool) ($row->is_active ?? false);
+
+        return self::component('XToggle', $isActive, [
+            'color' => 'positive',
+            'disable' => ! $canChange,
+        ], [
+            'type' => 'active',
+            'action' => $action,
+        ]);
     }
 
     public static function actionCheckbox(bool $checked, array $action, array $props = []): array

@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.2.0] - 2026-10-09
+### Added
+- `Cell::activeToggle($row, $canChange = true, $action = 'active')`: el interruptor verde de la columna Activo.
+  Apagar confirma con el diálogo de la tabla (record-active → active) y encender va directo; sin permiso se ve
+  bloqueado; una acción propia va a la página. Requiere `@quirosys/x-components` 2.25.0.
+- `Filter::isActive()` (Todos / Activos / Inactivos) y `Filter::applyIsActive($query, $filters, $column)`.
+- `DialogAction::getActiveRecordActionData(..., $deactivateHint)`: una línea que explica qué pasa al desactivar.
+### Changed
+- `Column::isActive()`: título "Activo" (antes "¿Activo?") y 100 px.
+- `Cell::badgeIsActive` / `Cell::badgeBoolean`: "Sí" con tilde por defecto.
+### Fixed
+- `DialogAction`: el nombre del registro va escapado (la descripción se pinta con v-html).
+### Deprecated
+- `Button::activeButton`, `Button::activeButtonOnlyIcon` y `Cell::badgeIsActive`: la columna Activo los reemplaza.
+
 ## [v1.2.2] - 2026-06-11
 ### Fixed
 - Removed hardcoded `"version"` field from `composer.json` (caused Packagist to skip tags)

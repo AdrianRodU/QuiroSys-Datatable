@@ -254,6 +254,8 @@ class Button implements JsonSerializable
 
     /**
      * Botón que cambia el estado activo/inactivo según la fila (row).
+     *
+     * @deprecated v2.2.0: se activa y desactiva con el interruptor de la columna Activo (Cell::activeToggle).
      */
     public static function activeButton($row, ?string $label = null, ?string $url = null, ?string $tooltip = null): self
     {
@@ -273,6 +275,8 @@ class Button implements JsonSerializable
 
     /**
      * Botón de estado activo/inactivo mostrando solo el icono (sin label).
+     *
+     * @deprecated v2.2.0: se activa y desactiva con el interruptor de la columna Activo (Cell::activeToggle).
      */
     public static function activeButtonOnlyIcon($row, ?string $url = null, ?string $tooltip = null): self
     {

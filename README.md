@@ -169,9 +169,12 @@ Retorna:
 
 ```php
 DialogAction::getActiveRecordActionData($record, 'name', 'plan');
+// v2.2.0: qué pasa al desactivarlo, en una línea aparte debajo de la pregunta
+DialogAction::getActiveRecordActionData($record, 'name', 'medio', false, 'La ficha deja de ofrecerlo.');
 ```
 
-Detecta el estado actual (`is_active`) y retorna el texto correspondiente (Activar / Desactivar).
+Detecta el estado actual (`is_active`) y retorna el texto correspondiente (Activar / Desactivar). Desde la
+v2.2.0 el nombre va escapado (el frontend pinta la descripción con `v-html`).
 
 ### `getActionData`
 
@@ -210,7 +213,7 @@ use Quirosys\Datatable\Table\Column;
 Column::make('name')->label('Nombre')
 Column::make('price')->label('Precio')->alignRight()->width('100px')
 Column::make('date')->label('Fecha')->alignCenter()
-Column::isActive()    // columna estándar de estado activo/inactivo
+Column::isActive()    // columna "Activo" (v2.2.0): su celda es Cell::activeToggle()
 Column::actions()     // columna estándar de botones de acción
 ```
 
@@ -226,6 +229,23 @@ $columns = (new ColumnBuilder())
     ->getColumns();
 ```
 
+### Columna "Activo" (v2.2.0)
+
+La convención de todas las tablas que se activan y desactivan: la columna `Column::isActive()` con un
+interruptor verde. Ya no se usan `Button::activeButton*` ni `Cell::badgeIsActive` (quedan como obsoletos).
+
+```php
+'is_active' => Cell::activeToggle($row),                     // cualquiera que vea la tabla lo cambia
+'is_active' => Cell::activeToggle($row, $puedeCambiar),      // sin permiso: bloqueado
+'is_active' => Cell::activeToggle($row, true, 'toggle-active'), // un diálogo propio de la página
+```
+
+- Apagar pide confirmación con el diálogo de la tabla: `GET {resource}/record-active/{id}` y
+  `POST {resource}/active` con `{ id, is_active: false }`.
+- Encender va directo: `POST {resource}/active` con `{ id, is_active: true }`.
+- El backend guarda el valor pedido (no invierte el actual): así una tabla desactualizada no lo deja al revés.
+- Requiere `@quirosys/x-components` 2.25.0 (XTableServer, XCellColumnRenderer y XDialogAction).
+
 ---
 
 ## Table — Filtros
@@ -236,11 +256,20 @@ $columns = (new ColumnBuilder())
 use Quirosys\Datatable\Table\Filter;
 
 Filter::makeInput('search')->label('Buscar')->cssClass('col-12')
+Filter::isActive('col-8 col-md-4')   // v2.2.0: Todos (por defecto) / Activos / Inactivos
+Filter::isActive('col-12 col-md-3')->value('active')->default('active')   // arranca en Activos
 Filter::makeSelect('status')->label('Estado')->options([
     ['id' => 'all', 'name' => 'Todos'],
     ['id' => 1,     'name' => 'Activo'],
     ['id' => 0,     'name' => 'Inactivo'],
 ])
+```
+
+La tabla lo aplica en su consulta:
+
+```php
+$query->tap(fn ($q) => Filter::applyIsActive($q, $filters));                 // is_active
+$query->tap(fn ($q) => Filter::applyIsActive($q, $filters, 'persons.is_active')); // con joins
 ```
 
 ### `FilterBuilder`

@@ -351,6 +351,39 @@ class Filter implements \JsonSerializable
     }
 
     /**
+     * Filtro "Activo" (v2.2.0): Todos (por defecto), Activos o Inactivos. La tabla lo aplica con
+     * Filter::applyIsActive($query, $filters).
+     */
+    public static function isActive(?string $class = null): self
+    {
+        return self::makeSelect('is_active', 'Activo', [
+            ['id' => 'active', 'name' => 'Activos'],
+            ['id' => 'inactive', 'name' => 'Inactivos'],
+        ], $class);
+    }
+
+    /**
+     * Aplica Filter::isActive() a la consulta: "Activos" → is_active = 1, "Inactivos" → 0; "Todos" no filtra.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder  $query
+     * @param  array  $filters  El 'filters' del request (lista de { name, value }).
+     * @param  string  $column  Columna a filtrar (con prefijo de tabla si la consulta tiene joins).
+     */
+    public static function applyIsActive($query, array $filters, string $column = 'is_active')
+    {
+        $filter = collect($filters)->firstWhere('name', 'is_active');
+        $value = is_array($filter) ? ($filter['value'] ?? 'all') : 'all';
+
+        if ($value === 'active') {
+            $query->where($column, true);
+        } elseif ($value === 'inactive') {
+            $query->where($column, false);
+        }
+
+        return $query;
+    }
+
+    /**
      * Filtro predefinido tipo tree-select (XTreeSelect).
      */
     public static function makeTreeSelect(string $name, string $label = '', array $options = [], ?string $class = null): self
