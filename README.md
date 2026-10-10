@@ -214,6 +214,7 @@ Column::make('name')->label('Nombre')
 Column::make('price')->label('Precio')->alignRight()->width('100px')
 Column::make('date')->label('Fecha')->alignCenter()
 Column::isActive()    // columna "Activo" (v2.2.0): su celda es Cell::activeToggle()
+Column::photo()       // columna "Foto" (v2.3.0): su celda es Cell::avatar()
 Column::actions()     // columna estándar de botones de acción
 ```
 
@@ -245,6 +246,21 @@ interruptor verde. Ya no se usan `Button::activeButton*` ni `Cell::badgeIsActive
 - Encender va directo: `POST {resource}/active` con `{ id, is_active: true }`.
 - El backend guarda el valor pedido (no invierte el actual): así una tabla desactualizada no lo deja al revés.
 - Requiere `@quirosys/x-components` 2.25.0 (XTableServer, XCellColumnRenderer y XDialogAction).
+- Con `@quirosys/x-components` 2.27.0 el interruptor queda centrado en su columna (antes, a la izquierda).
+
+### Columna "Foto" (v2.3.0)
+
+La foto de la persona de cada fila (personal, usuarios), en círculo y antes del nombre. Sin foto, sus iniciales
+sobre el primario suave; sin iniciales, un ícono de persona. No sale en el Excel.
+
+```php
+->addColumn(Column::photo())
+->addColumn(Column::make('name')->label('Nombre')->sortable())
+
+'photo' => Cell::avatar($fotoUrl, $row->name, '32px', 'JN'),   // $fotoUrl null = sin foto: iniciales
+```
+
+- Requiere `@quirosys/x-components` 2.27.0 para la fila sin foto (antes `$src` era obligatorio).
 
 ---
 

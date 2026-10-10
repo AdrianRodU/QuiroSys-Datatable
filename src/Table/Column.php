@@ -279,6 +279,20 @@ class Column implements JsonSerializable
     }
 
     /**
+     * Columna "Foto" (v2.3.0): la foto de la persona de cada fila, con Cell::avatar() (sin foto, sus iniciales).
+     * Va antes del nombre, centrada, y no sale en el Excel.
+     */
+    public static function photo(string $name = 'photo'): self
+    {
+        return self::make($name)
+            ->label('Foto')
+            ->alignCenter()
+            ->width('64px')
+            ->exportable(false)
+            ->sortable(false);
+    }
+
+    /**
      * Columna predefinida para acciones.
      */
     public static function actions(): self

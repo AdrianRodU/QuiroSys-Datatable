@@ -147,23 +147,30 @@ class Cell
     }
 
     /**
-     * Avatar (imagen de usuario o similar).
+     * Avatar (foto de una persona o similar), en círculo.
      *
-     * @param  string  $src  URL de la imagen
+     * Sin imagen (v2.3.0) pinta las iniciales sobre el color primario suave, como el menú del usuario; sin
+     * iniciales, un ícono de persona. Requiere `@quirosys/x-components` 2.27.0 para la fila sin foto.
+     *
+     * @param  string|null  $src  URL de la imagen (null o vacío: sin foto)
      * @param  string|null  $alt  Texto alternativo
      * @param  string|null  $size  Tamaño (ej: '32px')
+     * @param  string|null  $initials  Iniciales para la fila sin foto (ej: 'JN')
      */
-    public static function avatar(string $src, ?string $alt = null, ?string $size = null): array
+    public static function avatar(?string $src, ?string $alt = null, ?string $size = null, ?string $initials = null): array
     {
         $arr = [
             'type_input' => 'avatar',
-            'src' => $src,
+            'src' => $src ?: null,
         ];
         if ($alt) {
             $arr['alt'] = $alt;
         }
         if ($size) {
             $arr['size'] = $size;
+        }
+        if ($initials) {
+            $arr['initials'] = $initials;
         }
 
         return $arr;

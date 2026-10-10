@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.0] - 2026-10-10
+### Added
+- `Column::photo($name = 'photo')`: columna "Foto" centrada, 64 px, sin orden ni Excel.
+- `Cell::avatar(..., $initials)`: iniciales para la fila sin foto.
+### Changed
+- `Cell::avatar`: `$src` acepta null o vacío (fila sin foto: iniciales o un ícono de persona). Requiere
+  `@quirosys/x-components` 2.27.0.
+
 ## [v2.2.0] - 2026-10-09
 ### Added
 - `Cell::activeToggle($row, $canChange = true, $action = 'active')`: el interruptor verde de la columna Activo.
